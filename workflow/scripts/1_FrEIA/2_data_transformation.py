@@ -171,7 +171,7 @@ def BaseCompAbCalc(SampleDf, group, whichEnd, lvl):
         for c in ["Unit", "Base", "WhichEnd", "WhichGroup"]:
             BCDf[c] = BCDf[c].astype("category")
 
-        OutDf = OutDf.append([BCDf]).reset_index(drop=True)
+        OutDf = pd.concat([OutDf] + [BCDf]).reset_index(drop=True)
         # print(OutDf, group, lvl)
         # print(OutDf.info(memory_usage="deep"), "\n")
     return OutDf

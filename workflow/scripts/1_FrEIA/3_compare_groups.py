@@ -139,7 +139,7 @@ def PlotFourier(data, minLen, maxLen, amplitude, Groups, Palette):
         hFourierDf["Freq"] = freq*((maxLen-minLen))
         hFourierDf["Group"] = gr
 
-        FourierDf = FourierDf.append([hFourierDf])
+        FourierDf = pd.concat([FourierDf] + [hFourierDf])
     # print(FourierDf.sort_values(by=["Power"], ascending=False))
     PlotOut = sns.lineplot(data=FourierDf,
                            x="Freq",
@@ -247,7 +247,7 @@ def HypoTest(data, group1, Groups, x, y):
                           "P-val": StatFunc(Gr1, Gr2).pvalue,
                           "Stats": StatFunc(Gr1, Gr2).statistic,
                           "Annot": AnnotFunc(StatFunc(Gr1, Gr2).pvalue)}
-                OutDf = OutDf.append(OutDic, ignore_index=True)
+                OutDf = pd.concat([OutDf] + OutDic, ignore_index=True)
         #! !!!!!!!!!!Do we need to correct for multiple hypothesis testing?
         # Multiple hypotesis testing correction with the Bonferroni method.
         # if len(Groups)>=20:
@@ -336,14 +336,14 @@ def CatPlot(data, kind, x, y, hue, order, orientation, row, col, palette,
                 HypoDfH = HypoTest(data[data["Unit"] == u], ControlGroup,
                                    Groups, "Base", y)
                 HypoDfH["Unit"] = u
-                HypoDf = HypoDf.append([HypoDfH]).reset_index(drop=True)
+                HypoDf = pd.concat([HypoDf] + [HypoDfH]).reset_index(drop=True)
         else:
             # Hypothesis testing.
             for e in set(data["WhichEnd"]):
                 HypoDfH = HypoTest(data[data["WhichEnd"] == e],
                                    ControlGroup, Groups, x, y)
                 HypoDfH["WhichEnd"] = e
-                HypoDf = HypoDf.append([HypoDfH]).reset_index(drop=True)
+                HypoDf = pd.concat([HypoDf] + [HypoDfH]).reset_index(drop=True)
 
         # Statistical significance plotting.
         if row is not None:
@@ -681,7 +681,7 @@ def ReadData(args, sampTDf, WhichGroup, prefix, lvl):
                      "Check if folders and files are located under "
                      "[input]/4_FrEIA/3_Abundances/")
 
-        DataDf = DataDf.append(pool.map(partial(ReadFile,
+        DataDf = pd.concat([DataDf] + pool.map(partial(ReadFile,
                                                 args,
                                                 WhichGroup,
                                                 prefix,
@@ -834,7 +834,7 @@ def ThreadMDS(args, DataDf, groupBy, value):
     pool = Pool(processes=args.threads)
 
     try:
-        MDSDf = MDSDf.append(pool.map(partial(MotifDiversityScore,
+        MDSDf = pd.concat([MDSDf] + pool.map(partial(MotifDiversityScore,
                                               data,
                                               groupBy,
                                               value),
@@ -1051,7 +1051,7 @@ def GenomeLevelAnalysis(DataDf, sampTDf, Groups, ControlGroup,
                                         DataDf[(DataDf["WhichGroup"] == gr)
                                         & (DataDf["Base"] == base)]["RelAbSamp"
                                                                     ][maskNA])
-                    LRDf = LRDf.append({"Group": gr,
+                    LRDf = pd.concat([LRDf] + {"Group": gr,
                                         "Base": base,
                                         "Metric": numCol,
                                         "Slope": LinReg.slope,
@@ -1273,7 +1273,7 @@ def GenomeLevelAnalysis(DataDf, sampTDf, Groups, ControlGroup,
                                         DataDf[(DataDf["WhichGroup"] == gr)
                                                & (DataDf["Base"] == base)
                                                ]["RelAbSamp"][maskNA])
-                    LRDf = LRDf.append({"Group": gr,
+                    LRDf = pd.concat([LRDf] + {"Group": gr,
                                         "Base": base,
                                         "Metric": numCol,
                                         "Slope": LinReg.slope,
@@ -1464,7 +1464,7 @@ def GenomeLevelAnalysis(DataDf, sampTDf, Groups, ControlGroup,
                                                ][numCol][maskNA],
                                     MDSDf_unit[(MDSDf_unit["WhichGroup"] == gr)
                                                ]["MDS"][maskNA])
-                LRDf = LRDf.append({"Group": gr,
+                LRDf = pd.concat([LRDf] + {"Group": gr,
                                     "Metric": numCol,
                                     "Slope": LinReg.slope,
                                     "Intercept": LinReg.intercept,

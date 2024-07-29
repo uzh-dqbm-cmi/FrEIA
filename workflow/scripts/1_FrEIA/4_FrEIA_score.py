@@ -126,7 +126,7 @@ def mannwhitneyu_test(dat_Df, meta_df, args):
 
     pool = Pool(processes=args.threads)
 
-    mwu_Df = mwu_Df.append(pool.map(partial(mannwhitneyu_test_worker,
+    mwu_Df = pd.concat([mwu_Df] + pool.map(partial(mannwhitneyu_test_worker,
                                             dat_Df,
                                             args),
                                     base_L))
@@ -311,7 +311,7 @@ def euclidean_FrEIA_score(prop_df, div_df, control_V, case_V, args):
     pool = Pool(processes=args.threads)
 
     samp_L = prop_df.sample_name.unique().tolist()
-    ed_Df = ed_Df.append(pool.map(partial(euclidean_worker,
+    ed_Df = pd.concat([ed_Df] + pool.map(partial(euclidean_worker,
                                           samp_df,
                                           control_df,
                                           case_df),
