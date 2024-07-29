@@ -386,7 +386,7 @@ def ReadData(whichGroup, pathToFile, args):
 
 def Main():
     args = ParsingArguments()
-    sampTDf = pd.read_csv(args.SampleTable, delim_whitespace=True)
+    sampTDf = pd.read_csv(args.SampleTable, sep='\s+')
     # Extract sample name from path.
     sampleName = args.inPath.split("/")[-1].strip(".pq")
     # Extract the group of the sample from sample sheet.

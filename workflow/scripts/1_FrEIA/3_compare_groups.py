@@ -1814,7 +1814,7 @@ def Main():
     WhichLvl = ["Genome_Lvl"]
     Prefixes = ["M__", "T__"]
 
-    sampTDf = pd.read_csv(args.SampleTable, delim_whitespace=True)
+    sampTDf = pd.read_csv(args.SampleTable, sep='\s+')
     InputGroups = DetectControl(sampTDf).get("SampleGroups")
     InputControlGroup = DetectControl(sampTDf).get("ControlGroup")
 
@@ -1827,7 +1827,7 @@ def Main():
             DataDf = ReadData(args, sampTDf, InputGroups, prefix, lvl)
             DataDf = CalcRelAbGroup(DataDf, prefix)
             if args.Regroup.endswith(".csv"):
-                regrTDf = pd.read_csv(args.Regroup, delim_whitespace=True)
+                regrTDf = pd.read_csv(args.Regroup, sep='\s+')
                 ControlGroup = DetectControl(regrTDf).get("ControlGroup")
                 Groups = DetectControl(regrTDf).get("SampleGroups")
             else:

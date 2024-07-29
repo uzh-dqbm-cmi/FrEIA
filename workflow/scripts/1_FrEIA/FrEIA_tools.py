@@ -81,7 +81,7 @@ def DetectControl(sampTDF):
 
 def RegroupSamples(rgrPath, DataDf):
     try:
-        rgrDf = pd.read_csv(rgrPath, delim_whitespace=True)
+        rgrDf = pd.read_csv(rgrPath, sep='\s+')
     except KeyError:
         rgrDf = pd.read_csv(rgrPath)
 
